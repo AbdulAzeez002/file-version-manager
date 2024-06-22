@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { addNewVersion } from "../../../services/services";
 import { useNavigate } from "react-router-dom";
+import ErrorMessage from "../error-message/ErrorMessage";
 
 const AddVersion = ({ id }) => {
   const navigate = useNavigate();
@@ -9,8 +10,14 @@ const AddVersion = ({ id }) => {
     file: null,
   });
 
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitted(true);
+    if (!formValues.file) {
+      return;
+    }
     setLoading(true);
     const formData = new FormData();
     formData.append("file", formValues.file);
@@ -42,13 +49,13 @@ const AddVersion = ({ id }) => {
           onSubmit={handleSubmit}
         >
           <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-            >
+            <label className="block text-gray-700 text-sm font-bold mb-2">
               Upload File
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700  leading-tight focus:outline-none focus:shadow-outline"
+              className={`shadow appearance-none border rounded w-full py-2 px-3 mb-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                isSubmitted && !formValues.file ? "border-red-500" : ""
+              }`}
               id="password"
               type="file"
               placeholder="Upload your file"
@@ -56,6 +63,9 @@ const AddVersion = ({ id }) => {
               name="file"
               onChange={handleChange}
             />
+            {isSubmitted && !formValues.file && (
+              <ErrorMessage data="File is Required" />
+            )}
           </div>
 
           <div className="">
@@ -74,13 +84,6 @@ const AddVersion = ({ id }) => {
                 Upload
               </button>
             )}
-
-            {/* <a
-              className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-              href="#"
-            >
-              Forgot Password?
-            </a> */}
           </div>
         </form>
       </div>

@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { insertFile } from "../../../services/services";
 import { useNavigate } from "react-router-dom";
+import ErrorMessage from "../error-message/ErrorMessage";
 
 const AddFile = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [formValues, setFormValues] = useState({
     documentName: "",
     documentType: "",
@@ -14,6 +16,15 @@ const AddFile = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitted(true);
+    if (
+      !formValues.documentName ||
+      !formValues.documentType ||
+      !formValues.documentLocation ||
+      !formValues.file
+    ) {
+      return;
+    }
     setLoading(true);
     const formData = new FormData();
     formData.append("file", formValues.file);
@@ -49,14 +60,11 @@ const AddFile = () => {
           onSubmit={handleSubmit}
         >
           <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-             
-            >
+            <label className="block text-gray-700 text-sm font-bold mb-2">
               Document Name
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className={`shadow appearance-none border rounded w-full py-2 px-3 mb-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${(isSubmitted && !formValues.documentName)?'border-red-500':''}`}
               id="username"
               type="text"
               placeholder="Document Name"
@@ -64,6 +72,9 @@ const AddFile = () => {
               name="documentName"
               onChange={handleChange}
             />
+            {isSubmitted && !formValues.documentName && (
+              <ErrorMessage data="Document Name is Required"/>
+            )}
           </div>
 
           <div className="mb-4">
@@ -72,7 +83,7 @@ const AddFile = () => {
             </label>
             <div className="relative">
               <select
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700  leading-tight focus:outline-none focus:shadow-outline"
+                className={`shadow appearance-none border rounded w-full py-2 px-3 mb-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${(isSubmitted && !formValues.documentType)?'border-red-500':''}`}
                 id="grid-state"
                 onChange={handleChange}
                 name="documentType"
@@ -96,17 +107,18 @@ const AddFile = () => {
                   <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                 </svg>
               </div>
+
+              {isSubmitted && !formValues.documentType && (
+              <ErrorMessage data="Document Type is Required"/>
+            )}
             </div>
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-             
-            >
+            <label className="block text-gray-700 text-sm font-bold mb-2">
               Document Location
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              className={`shadow appearance-none border rounded w-full py-2 px-3 mb-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${(isSubmitted && !formValues.documentLocation)?'border-red-500':''}`}
               id="username"
               type="text"
               placeholder="Document Location"
@@ -114,23 +126,25 @@ const AddFile = () => {
               name="documentLocation"
               onChange={handleChange}
             />
+             {isSubmitted && !formValues.documentLocation && (
+              <ErrorMessage data="Document Location is Required"/>
+            )}
           </div>
           <div className="mb-4">
-            <label
-              className="block text-gray-700 text-sm font-bold mb-2"
-            
-            >
+            <label className="block text-gray-700 text-sm font-bold mb-2">
               Upload File
             </label>
             <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700  leading-tight focus:outline-none focus:shadow-outline"
+              className={`shadow appearance-none border rounded w-full py-2 px-3 mb-1 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${(isSubmitted && !formValues.file)?'border-red-500':''}`}
               id="password"
               type="file"
               placeholder="Upload your file"
-              //   value={formValues.file}
               name="file"
               onChange={handleChange}
             />
+             {isSubmitted && !formValues.file && (
+              <ErrorMessage data="File is Required"/>
+            )}
           </div>
 
           <div className="">
@@ -149,7 +163,6 @@ const AddFile = () => {
                 Upload
               </button>
             )}
-
           </div>
         </form>
       </div>
