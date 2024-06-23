@@ -6,6 +6,7 @@ import ErrorMessage from "../error-message/ErrorMessage";
 const AddVersion = ({ id }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formValues, setFormValues] = useState({
     file: null,
   });
@@ -29,6 +30,7 @@ const AddVersion = ({ id }) => {
       }
     } catch (error) {
       console.log(error, "error");
+      setError(error?.message ?? "Some thing went wrong. Try again");
     } finally {
       setLoading(false);
     }
@@ -48,6 +50,7 @@ const AddVersion = ({ id }) => {
           className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
           onSubmit={handleSubmit}
         >
+          <ErrorMessage data={error} />
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Upload File

@@ -7,18 +7,19 @@ export const insertFile = async (body) => {
     const response = await axios.post(`${backendUrl}/api/file`, body);
     return response;
   } catch (error) {
-    console.log(error);
+    // console.log(error.response.data.error, "errorrr");
+    throw new Error(error?.response?.data?.error ?? "some thing went wrong");
   }
 };
 
-export const addNewVersion = async (body,id) => {
-    try {
-      const response = await axios.post(`${backendUrl}/api/file/${id}`, body);
-      return response;
-    } catch (error) {
-      console.log(error);
-    }
-  };
+export const addNewVersion = async (body, id) => {
+  try {
+    const response = await axios.post(`${backendUrl}/api/file/${id}`, body);
+    return response;
+  } catch (error) {
+    throw new Error(error?.response?.data?.error ?? "some thing went wrong");
+  }
+};
 
 export const getAllFiles = async () => {
   try {
